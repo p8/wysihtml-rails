@@ -10006,7 +10006,12 @@ wysihtml.dom.replaceWithChildNodes = function(node) {
       iframeDocument.close();
 
       this.getWindow = function() { return iframe.contentWindow; };
-      this.getDocument = function() { return iframe.contentWindow.document; };
+      this.getDocument = function() {
+        var w = this.getWindow();
+        if(w !== null) {
+          return w.document;
+        }
+      };
 
       // Catch js errors and pass them to the parent's onerror event
       // addEventListener("error") doesn't work properly in some browsers
