@@ -8299,13 +8299,7 @@ wysihtml.dom.getAttribute = function(node, attributeName) {
   var HAS_GET_ATTRIBUTE_BUG = !wysihtml.browser.supportsGetAttributeCorrectly();
   attributeName = attributeName.toLowerCase();
   var nodeName = node.nodeName;
-  if (nodeName == "IMG" && attributeName == "src" && wysihtml.dom.isLoadedImage(node) === true) {
-    // Get 'src' attribute value via object property since this will always contain the
-    // full absolute url (http://...)
-    // this fixes a very annoying bug in firefox (ver 3.6 & 4) and IE 8 where images copied from the same host
-    // will have relative paths, which the sanitizer strips out (see attributeCheckMethods.url)
-    return node.src;
-  } else if (HAS_GET_ATTRIBUTE_BUG && "outerHTML" in node) {
+  if (HAS_GET_ATTRIBUTE_BUG && "outerHTML" in node) {
     // Don't trust getAttribute/hasAttribute in IE 6-8, instead check the element's outerHTML
     var outerHTML      = node.outerHTML.toLowerCase(),
         // TODO: This might not work for attributes without value: <input disabled>
@@ -8336,9 +8330,7 @@ wysihtml.dom.getAttributes = function(node) {
   for (attr in node.attributes) {
     if ((node.attributes.hasOwnProperty && node.attributes.hasOwnProperty(attr)) || (!node.attributes.hasOwnProperty && Object.prototype.hasOwnProperty.call(node.attributes, attr)))  {
       if (node.attributes[attr].specified) {
-        if (nodeName == "IMG" && node.attributes[attr].name.toLowerCase() == "src" && wysihtml.dom.isLoadedImage(node) === true) {
-          attributes['src'] = node.src;
-        } else if (wysihtml.lang.array(['rowspan', 'colspan']).contains(node.attributes[attr].name.toLowerCase()) && HAS_GET_ATTRIBUTE_BUG) {
+        if (wysihtml.lang.array(['rowspan', 'colspan']).contains(node.attributes[attr].name.toLowerCase()) && HAS_GET_ATTRIBUTE_BUG) {
           if (node.attributes[attr].value !== 1) {
             attributes[node.attributes[attr].name] = node.attributes[attr].value;
           }
